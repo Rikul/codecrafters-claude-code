@@ -119,9 +119,16 @@ def list_conversations_cmd(store: ConversationStore, channel: str) -> CommandHan
         convs = store.list(channel)
         if not convs:
             return "No conversations yet."
-        lines = [f"Conversations ({len(convs)}):"]
+        
+        total = len(convs)
+        lines = []
+
+        if args.strip().lower() != "all":
+            convs = convs[:10]
+        
         for c in convs:
-            lines.append(f"  [{c['id']}] {c['name']} — {c['message_count']} messages, updated {c['updated_at'][:16]}")
+            lines.append(f"#{c['id']} {c['name']} — {c['message_count']} msgs")
+        
         return "\n".join(lines)
     return _list
 

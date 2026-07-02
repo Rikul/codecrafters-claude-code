@@ -56,7 +56,7 @@ class BackgroundAgent(Agent):
         self.registry.register(BotCommand("trace",  "Toggle LLM tracing. Usage: /trace [on|off]", trace_cmd))
         self.registry.register(BotCommand("status", "Show bot status.", make_status_cmd(ch)))
         self.registry.register(BotCommand("stop",   "Pause the bot.", self._stop_cmd))
-        self.registry.register(BotCommand("list",   "List conversations.", list_conversations_cmd(self._store, ch)))
+        self.registry.register(BotCommand("list",   "List conversations. Usage: /list [all]", list_conversations_cmd(self._store, ch)))
         self.registry.register(BotCommand("new",    "Start a new conversation.", new_conversation_cmd(self)))
         self.registry.register(BotCommand("load",   "Load a conversation. Usage: /load <id>", load_conversation_cmd(self)))
         self.registry.register(BotCommand("fork",   "Fork a conversation. Usage: /fork [id]", fork_conversation_cmd(self)))
