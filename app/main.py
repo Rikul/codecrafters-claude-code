@@ -120,7 +120,7 @@ async def run_cli(args):
     cli_registry.register(BotCommand("status",               "Show bot status.",                        make_status_cmd()))
     cli_registry.register(BotCommand("model",                "Get or set model. Usage: /model [name]",  model_cmd))
     cli_registry.register(BotCommand("trace",               "Toggle LLM tracing. Usage: /trace [on|off]", trace_cmd))
-    cli_registry.register(BotCommand("list",   "List conversations.",                      list_conversations_cmd(agent._store, agent._channel_str)))
+    cli_registry.register(BotCommand("list",   "List conversations. Usage: /list [all]",                      list_conversations_cmd(agent._store, agent._channel_str)))
     cli_registry.register(BotCommand("new",    "Start a new conversation.",                new_conversation_cmd(agent)))
     cli_registry.register(BotCommand("load",   "Load a conversation. Usage: /load <id>",   load_conversation_cmd(agent)))
     cli_registry.register(BotCommand("fork",   "Fork a conversation. Usage: /fork [id]",   fork_conversation_cmd(agent)))
