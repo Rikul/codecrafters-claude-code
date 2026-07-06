@@ -55,3 +55,16 @@ def test_read_file_size_larger_than_remaining(tmp_path):
     f = tmp_path / "small.txt"
     f.write_text("hello", encoding="utf-8")
     assert read_file(str(f), offset=3, size=100) == "lo"
+
+
+def test_read_file_negative_offset_or_size(tmp_path):
+    f = tmp_path / "test.txt"
+    f.write_text("hello", encoding="utf-8")
+    assert "Error" in read_file(str(f), offset=-1)
+    assert "Error" in read_file(str(f), size=-1)
+
+
+def test_read_file_utf8_split(tmp_path):
+    f = tmp_path / "utf8.txt"
+    f.write_bytes(b"abc\xf0\x9f\x9a\x80def")
+    assert read_file(str(f), offset=3, size=2) == "\ufffd\ufffd"

@@ -34,12 +34,17 @@ class ReadFileTool(Tool):
     def call(file_path: str, offset: int = 0, size: int | None = None) -> str:
         log.info(f"read_file, file_path: {file_path}, offset: {offset}, size: {size}")
 
+        if offset < 0:
+            return "Error: offset must be non-negative"
+        if size is not None and size < 0:
+            return "Error: size must be non-negative"
+
         try:
             with open(file_path, "rb") as f:
                 if offset:
                     f.seek(offset)
                 data = f.read(size) if size is not None else f.read()
-            return data.decode("utf-8")
+            return data.decode("utf-8", errors="replace")
         except FileNotFoundError:
             return f"Error: file {file_path} does not exist"
         except Exception as e:
