@@ -4,6 +4,9 @@ from ..core.tool import Tool
 import httpx
 import json
 
+REQUEST_TIMEOUT_SECONDS = 10.0
+
+
 class HackerNewsTool(Tool):
 
     @staticmethod
@@ -30,19 +33,21 @@ class HackerNewsTool(Tool):
         log.info(f"hackernews: number_of_stories: {number_of_stories}")
 
         try:
+            with httpx.Client(timeout=REQUEST_TIMEOUT_SECONDS) as client:
+                response = client.get("https://hacker-news.firebaseio.com/v0/topstories.json")
+                response.raise_for_status()
+                story_ids = response.json()
 
-            response = httpx.get("https://hacker-news.firebaseio.com/v0/topstories.json")
-            story_ids = response.json()
-        
-            # Fetch story details
-            stories = []
-            for story_id in story_ids[:number_of_stories]:
-                story_response = httpx.get(f"https://hacker-news.firebaseio.com/v0/item/{story_id}.json")
-                story = story_response.json()
-                if story is None:
-                    continue
-                story["username"] = story.get("by", "unknown")
-                stories.append(story)
+                # Fetch story details
+                stories = []
+                for story_id in story_ids[:number_of_stories]:
+                    story_response = client.get(f"https://hacker-news.firebaseio.com/v0/item/{story_id}.json")
+                    story_response.raise_for_status()
+                    story = story_response.json()
+                    if story is None:
+                        continue
+                    story["username"] = story.get("by", "unknown")
+                    stories.append(story)
             return json.dumps(stories)
         
         except Exception as e:
